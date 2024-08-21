@@ -65,6 +65,36 @@ def draw_leaf(pos_x, pos_y, rotation, factor=1, two=True):
             pyxel.line(a[0], a[1], b[0], b[1], col=3)
 
 
+def draw_dead_leaf(pos_x, pos_y, rotation, factor=1, two=True):
+    new_leaf = add_transform(leaf)
+    new_leaf = rotate(new_leaf, amount=rotation)
+    if factor != 1:
+        new_leaf = scale(new_leaf, factor)
+    new_leaf = add_transform(new_leaf, x= pos_x, y=pos_y)
+    for i in range(len(new_leaf)-1):
+        a = new_leaf[i]
+        b = new_leaf[i+1]
+        pyxel.line(a[0], a[1], b[0], b[1], col=9) #13 or 9
+    if two:
+        new_leaf = add_transform(leaf)
+        new_leaf = rotate(new_leaf, amount=rotation)
+        new_leaf = scale(new_leaf, 0.7)
+        new_leaf = add_transform(new_leaf, x= pos_x, y=pos_y)
+        for i in range(len(new_leaf)-1):
+            a = new_leaf[i]
+            b = new_leaf[i+1]
+            pyxel.line(a[0], a[1], b[0], b[1], col=4) #4
+    if False:
+        new_leaf = add_transform(leaf)
+        new_leaf = rotate(new_leaf, amount=rotation)
+        new_leaf = scale(new_leaf, 0.3)
+        new_leaf = add_transform(new_leaf, x= pos_x, y=pos_y)
+        for i in range(len(new_leaf)-1):
+            a = new_leaf[i]
+            b = new_leaf[i+1]
+            pyxel.line(a[0], a[1], b[0], b[1], col=3)
+
+
 class App:
     def __init__(self):
         pyxel.init(256, 256)
@@ -72,7 +102,11 @@ class App:
         self.start()
         pyxel.run(self.update, self.draw)
 
-    def start(self):
+    def start(self, s=(), l=(), t=()):
+        self.old_segments = s
+        self.old_lines = l
+        self.old_terminal = t
+
         self.ticker = 0
         self.tip_x = 256/2-4
         self.tip_y = 256-8
@@ -196,11 +230,11 @@ class App:
         self.ticker += 1
         
         if pyxel.btnp(pyxel.KEY_R):
-            self.start()
+            self.start(self.segments, self.lines, self.terminal)
 
         if pyxel.btnp(pyxel.KEY_M):
             pyxel.stop()
-            
+
         if self.chloro > 30:
             self.regenturn += 1
             self.energy += 13
@@ -340,6 +374,14 @@ class App:
         
         self.draw_window()
         
+        if len(self.old_segments) > 0:
+            for x,y in self.old_segments:
+                draw_dead_leaf(x, y, x+y, factor=0.5, two=False)
+            for line in self.old_lines:   
+                pyxel.line(line[1][0], line[1][1], line[0][0], line[0][1], col=4)
+            for terminal in self.old_terminal[:-1]:
+                draw_dead_leaf(terminal[0], terminal[1], sum(terminal))
+
 
         pyxel.rect(5, 20, self.energy, 4, col=12)
         #pyxel.blt(0,0,0,0,0,256,256)
