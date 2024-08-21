@@ -69,6 +69,10 @@ class App:
     def __init__(self):
         pyxel.init(256, 256)
         pyxel.load("builttoscale.pyxres")
+        self.start()
+        pyxel.run(self.update, self.draw)
+
+    def start(self):
         self.ticker = 0
         self.tip_x = 256/2-4
         self.tip_y = 256-8
@@ -113,7 +117,7 @@ class App:
             color = random.choices([9,10], weights=[0.8,0.2], k=1)[0]
             self.sun_noise.append((lightx, lighty, color))
 
-        pyxel.run(self.update, self.draw)
+        
         
     #'CDEFGAB'+'#-'+'01234' or 'R'
     #TSPN
@@ -239,7 +243,9 @@ class App:
             self.add_segment(destination)        
 
         if pyxel.btnp(pyxel.KEY_R):
-            self.roots.append((self.roots[-1][0]-distance, self.roots[-1][1]))
+            self.start()
+            #self.roots.append((self.roots[-1][0]-distance, self.roots[-1][1]))
+
     
         if pyxel.btnp(pyxel.KEY_I):
             self.roots.append((self.roots[-1][0]+distance, self.roots[-1][1]))
@@ -377,7 +383,7 @@ class App:
             for terminal in self.terminal[:-1]:
                 draw_leaf(terminal[0], terminal[1], sum(terminal))
 
-        pyxel.rect(0, 5, 36, 23, 0)
+        pyxel.rect(0, 5, 40, 23, 0)
         pyxel.rect(5, 13, self.chloro, 4, col=11)
         pyxel.rect(5, 20, self.energy, 4, col=12)
         pyxel.text(5,5, f'{self.score}', 15)
