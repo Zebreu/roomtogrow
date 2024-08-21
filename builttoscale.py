@@ -194,8 +194,13 @@ class App:
 
     def update(self):
         self.ticker += 1
+        
+        if pyxel.btnp(pyxel.KEY_R):
+            self.start()
+
         if pyxel.btnp(pyxel.KEY_M):
             pyxel.stop()
+            
         if self.chloro > 30:
             self.regenturn += 1
             self.energy += 13
@@ -240,11 +245,7 @@ class App:
                     destination = prompt[1]
                     self.reset_prompts()
                     break            
-            self.add_segment(destination)        
-
-        if pyxel.btnp(pyxel.KEY_R):
-            self.start()
-            #self.roots.append((self.roots[-1][0]-distance, self.roots[-1][1]))
+            self.add_segment(destination)      
 
     
         if pyxel.btnp(pyxel.KEY_I):
